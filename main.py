@@ -13,12 +13,12 @@ def main():
         print('wrong usage, please try uv run main.py "prompt"')
         sys.exit(1)
     
-    
     prompt = sys.argv[1]
     messages = [
         types.Content(role='user', parts=[types.Part(text=prompt)])
     ]
     verbose = '--verbose' in sys.argv[2:]
+    
     generate_content(client, messages, verbose)
 
 
