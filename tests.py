@@ -1,17 +1,10 @@
-from functions.get_files_content import get_files_content
+from functions.write_file import write_file
 
-lorem_result = get_files_content('calculator', 'lorem.txt')
-print(lorem_result)
+lorem_write = write_file('calculator', 'lorem.txt', "wait, this isn't lorem ipsum")
+print(lorem_write)
 
-main_result = get_files_content("calculator", "main.py")
-print(main_result)
+more_lorem_write = write_file('calculator', 'pkg/morelorem.txt', 'lorem ipsum dolor sit amet')
+print(more_lorem_write)
 
-pkg_result = get_files_content("calculator", "pkg/calculator.py")
-print(pkg_result)
-
-bin_result = get_files_content("calculator", "/bin/cat")
-print(bin_result)
-
-pkg_error_result = get_files_content("calculator", "pkg/does_not_exist.py")
-print(pkg_error_result)
-
+temp_write = write_file('calculator', '/tmp/temp.txt', 'this should not be allowed')
+print(temp_write)
