@@ -1,18 +1,17 @@
-from functions.get_files_info import get_files_info
+from functions.get_files_content import get_files_content
 
-current_result = get_files_info('calculator', ".")
-print('Result for current directory:')
-print(f"{current_result}")
+lorem_result = get_files_content('calculator', 'lorem.txt')
+print(lorem_result)
 
-pkg_result = get_files_info('calculator', 'pkg')
-print("Result for 'pkg' directory:")
-print(f'{pkg_result}')
+main_result = get_files_content("calculator", "main.py")
+print(main_result)
 
-bin_result = get_files_info('calculator', '/bin')
-print("Result for '/bin' directory:")
-print(f'{bin_result}')
+pkg_result = get_files_content("calculator", "pkg/calculator.py")
+print(pkg_result)
 
-prev_result = get_files_info('calculator', '../')
-print("Result for '../' directory:")
-print(f'{prev_result}')
+bin_result = get_files_content("calculator", "/bin/cat")
+print(bin_result)
+
+pkg_error_result = get_files_content("calculator", "pkg/does_not_exist.py")
+print(pkg_error_result)
 

@@ -17,7 +17,6 @@ def get_files_info(working_directory, directory="."):
     files_results = os.listdir(full_path)
     entries = []
     try:
-
         for file in files_results:
             entry_path = os.path.join(full_path, file)
             file_size = os.path.getsize(entry_path)
