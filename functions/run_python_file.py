@@ -8,11 +8,16 @@ schema_run_python_file = types.FunctionDeclaration(
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="The directory to run files from, relative to the working directory. If not provided, run files in the working directory itself.",
+                description="The filepath to the file to run, relative to the working directory.",
             ),
+            'args': types.Schema(
+                type=types.Type.STRING,
+                description='Args that the the function can call, they are optional',
+            )
         },
+        required= ['file_path']
     ),
 )
 
