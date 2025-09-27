@@ -21,9 +21,10 @@ def main():
         types.Content(role='user', parts=[types.Part(text=prompt)])
     ]
     verbose = '--verbose' in sys.argv[2:]
-    
     generate_content(client, messages, verbose)
 
+    if verbose:
+        print(f'User prompt: {prompt}')
 
 
 def generate_content(client, messages, verbose):
@@ -32,18 +33,25 @@ def generate_content(client, messages, verbose):
             tools=[available_functions], system_instruction=system_prompt
         )
     )
-    func_call = response.function_calls
-    if func_call:
-        for call in func_call:
-            print(f'Calling function: {call.name}({call.args})')
-    print(response.text)
-    user_prompt = sys.argv[1]
+    function_responses = []
+    for function_call_part in response.function_calls:
+        function_call_result = call_function(function_call_part, verbose)
+        if not function_call_result.parts or not function_call_result.parts[0].function_response:
+            raise Exception('empty function call')
+        if verbose:
+            print(f"-> {function_call_result.parts[0].function_response.response}")
+        function_responses.append(function_call_result.parts[0])
+    if not function_responses:
+        raise Exception("no function responses")
+    
+    
     tokens = response.usage_metadata.prompt_token_count
     candidates = response.usage_metadata.candidates_token_count
+    if not response.function_calls:
+        return response.text
     if verbose:
-        print(f'User prompt: {user_prompt}')
-        print(f'Prompt tokens: {tokens}')
-        print(f'Response tokens: {candidates}')    
+         print(f'Prompt tokens: {tokens}')
+         print(f'Response tokens: {candidates}')    
         
 if __name__ == '__main__':
     main()
