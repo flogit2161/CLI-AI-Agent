@@ -67,6 +67,7 @@ def generate_content(client, messages, verbose):
     messages.append(types.Content(role="user", parts=function_responses))
     tokens = response.usage_metadata.prompt_token_count
     candidates = response.usage_metadata.candidates_token_count
+    
     if not response.function_calls:
         return response.text
     if verbose:
