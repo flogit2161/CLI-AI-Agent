@@ -21,7 +21,22 @@ def main():
         types.Content(role='user', parts=[types.Part(text=prompt)])
     ]
     verbose = '--verbose' in sys.argv[2:]
-    generate_content(client, messages, verbose)
+    iters = 0
+    max_iters = 20
+    while True:
+        iters += 1
+        if iters > max_iters:
+            print(f"Maximum iterations ({max_iters}) reached.")
+            sys.exit(1)
+
+        try:
+            final_response = generate_content(client, messages, verbose)
+            if final_response:
+                print("Final response:")
+                print(final_response)
+                break
+        except Exception as e:
+            print(f"Error in generate_content: {e}")
 
     if verbose:
         print(f'User prompt: {prompt}')
@@ -33,6 +48,11 @@ def generate_content(client, messages, verbose):
             tools=[available_functions], system_instruction=system_prompt
         )
     )
+    for candidate in response.candidates:
+        function_content = candidate.content
+        messages.append(function_content)
+    
+        
     function_responses = []
     for function_call_part in response.function_calls:
         function_call_result = call_function(function_call_part, verbose)
@@ -43,8 +63,8 @@ def generate_content(client, messages, verbose):
         function_responses.append(function_call_result.parts[0])
     if not function_responses:
         raise Exception("no function responses")
-    
-    
+     
+    messages.append(types.Content(role="user", parts=function_responses))
     tokens = response.usage_metadata.prompt_token_count
     candidates = response.usage_metadata.candidates_token_count
     if not response.function_calls:
